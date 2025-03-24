@@ -14,6 +14,7 @@ describe('ical-date-parser', () => {
   });
 
   it('Invalid input format throws error', () => {
+    expect(() => iCalDateParser('20140422T233000')).toThrow();
     expect(() => iCalDateParser('20140422X233000Z')).toThrow();
     expect(() => iCalDateParser('20140422T233000Y')).toThrow();
     expect(() => iCalDateParser('20a40422T233000Z')).toThrow();
@@ -22,6 +23,10 @@ describe('ical-date-parser', () => {
     expect(() => iCalDateParser(919191919191919197)).toThrow();
     expect(() => iCalDateParser('butt')).toThrow();
   });
+
+  it('Invalid input with timezone throws error', () => {
+    expect(() => iCalDateParser('20140422T233000Z', 'America/Sao_Paulo')).toThrow();
+  })
 
   it('Date gets parsed correctly', () => {
     var d = iCalDateParser('20140422T233000Z');
@@ -53,5 +58,13 @@ describe('ical-date-parser', () => {
 
     d = iCalDateParser('20141223T012000Z');
     expect(d.getUTCMonth()).toEqual(11);
+  });
+
+  it('Date gets parsed correctly with timezone', () => {
+    var d = iCalDateParser('20250324T120000', 'America/Sao_Paulo');
+    expect(d.getUTCHours()).toEqual(15);
+
+    d = iCalDateParser('20250324T220000', 'America/Sao_Paulo');
+    expect(d.getUTCMonth()).toEqual(1);
   });
 });
